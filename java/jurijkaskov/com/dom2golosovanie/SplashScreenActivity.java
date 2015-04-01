@@ -4,23 +4,13 @@ import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
-import android.os.Handler;
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.view.View;
-import android.view.WindowManager;
 import android.widget.TextView;
 
 import java.io.File;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.GregorianCalendar;
 
 import static java.lang.Thread.sleep;
 
@@ -84,9 +74,8 @@ public class SplashScreenActivity extends Activity {
                     } catch (MalformedURLException e) {
                         e.printStackTrace();
                     }*/
-                    d2p.updateDB((String) heroes.get(i)); // обновление и вставка в базу героя
+                    d2p.downloadHero((String) heroes.get(i)); // обновление и вставка в базу героя
 
-                    Log.i("11", (String) heroes.get(i));
                     publishProgress(i);
                 }
 
