@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="splash_screen_bg_color">#FF2B7A</color> <!--заливка splash screen -->
+    <color name="splash_screen_loading_status_color">#B6B6B6</color>
+</resources>
