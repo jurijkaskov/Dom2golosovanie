@@ -53,9 +53,9 @@ public class Dom2ruParser {
         hero.setAgeHero(this.parseAgeHero(html, "<td class='right'>(.*?)\\s(лет|года|год)\\s</td>")); // возраст
         hero.setCity(this.parseCity(html, "<td class='left'>город</td><td class='right'>(.*?)</td>")); // город
         hero.setSignOfTheZodiac(this.parseSignOfTheZodiac(html, "<td class='right'><span class='relative'><span>(.*?)<img src")); // зодиак
-        hero.setDescription(this.parseDescription(html, "<td class='right'><span class='relative'><span>(.*?)<img src")); // описание героя
+        hero.setDescription(this.parseDescription(html, "<div class=\"content-text\">\\s+<p(.*?)>(.*?)<\\/div>")); // описание героя
 
-        Log.i("666", count + "=" + id+ "[-"+this.parseStartDate(html, "<td class='right'><span class='relative'><span>(.*?)<img src")+"-]");
+        Log.i("666", count + "=" + id+ "[-"+this.parseDescription(html, "<div class=\"content-text\">\\s+<p(.*?)>(.*?)<\\/div>")+"-]");
         count++;
 
     }
@@ -210,9 +210,9 @@ public class Dom2ruParser {
         Matcher regexMatcher = regex.matcher(html);
 
         if (regexMatcher.find()) {
-            String description = regexMatcher.group(1).trim();
+            String description = regexMatcher.group(0).trim();
             if (description.length() > 0) {
-                return description.trim();
+                return description.replaceAll("<!--(.*)-->", "").replaceAll("<span(.*?)>", "<span>").replaceAll("<p(.*?)>", "<p>").replaceAll("<a(.*?)</a>", "").replaceAll("<br />", "").replaceAll("</div>", "").replaceAll("<div class=\"content-text\">", "").replaceAll("<p></p>", "").replaceAll("<p>&nbsp;</p>", "").trim();
             }
         }
 
