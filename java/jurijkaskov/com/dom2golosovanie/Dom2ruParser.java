@@ -47,9 +47,15 @@ public class Dom2ruParser {
         if (html.length() == 0 || html == null)return; // если страница не получена или пустая, то пропускается участник
 
         Hero hero = new Hero();
-        hero.setFio(this.parseHeroName(html, "<h2>[A-Za-zА-Яа-я ]{1,}</h2>")+"-]"); // имя фамилия героя
+        hero.setFio(this.parseHeroName(html, "<h2>[A-Za-zА-Яа-я ]{1,}</h2>")); // имя фамилия героя
+        hero.setDaysOfTheShow(this.parseDaysOfTheShow(html, "[0-9]{1,}\\s[а-я]{1,}<p class='date'>c\\s\\s<nobr>(.*?)</nobr></p>")); // всего дней на шоу
+        hero.setStartDate(this.parseStartDate(html, "[0-9]{1,}\\s[а-я]{1,}<p class='date'>c\\s\\s<nobr>(.*?)</nobr></p>")); // день прихода
+        hero.setAgeHero(this.parseAgeHero(html, "<td class='right'>(.*?)\\s(лет|года|год)\\s</td>")); // возраст
+        hero.setCity(this.parseCity(html, "<td class='left'>город</td><td class='right'>(.*?)</td>")); // город
+        hero.setSignOfTheZodiac(this.parseSignOfTheZodiac(html, "<td class='right'><span class='relative'><span>(.*?)<img src")); // зодиак
+        hero.setDescription(this.parseDescription(html, "<td class='right'><span class='relative'><span>(.*?)<img src")); // описание героя
 
-        //Log.i("666", count + "=" + id+ "[-"+this.parseHeroName(html, "<h2>[A-Za-zА-Яа-я ]{1,}</h2>")+"-]");
+        Log.i("666", count + "=" + id+ "[-"+this.parseStartDate(html, "<td class='right'><span class='relative'><span>(.*?)<img src")+"-]");
         count++;
 
     }
@@ -110,9 +116,106 @@ public class Dom2ruParser {
         if (regexMatcher.find()) {
             String fio = regexMatcher.group(0).trim();
             if (fio.length() > 0) {
-                return fio.substring(4, fio.length()-5);
+                return fio.substring(4, fio.length()-5).trim();
             }
         }
+        return result;
+    }
+
+    private String parseDaysOfTheShow(String html, String pattern){
+        String result = "";
+
+        Pattern regex = Pattern.compile(pattern);
+        Matcher regexMatcher = regex.matcher(html);
+
+        if (regexMatcher.find()) {
+            String daysoftheshow = regexMatcher.group(0).trim();
+            if (daysoftheshow.length() > 0) {
+                String[] parts = daysoftheshow.split(" ");
+                return parts[0].trim();
+            }
+        }
+
+        return result;
+    }
+
+    private String parseStartDate(String html, String pattern){
+        String result = "";
+
+        Pattern regex = Pattern.compile(pattern);
+        Matcher regexMatcher = regex.matcher(html);
+
+        if (regexMatcher.find()) {
+            String startdate = regexMatcher.group(1).trim();
+            if (startdate.length() > 0) {
+                return startdate.trim();
+            }
+        }
+
+        return result;
+    }
+
+    private String parseAgeHero(String html, String pattern){
+        String result = "";
+
+        Pattern regex = Pattern.compile(pattern);
+        Matcher regexMatcher = regex.matcher(html);
+
+        if (regexMatcher.find()) {
+            String agehero = regexMatcher.group(1).trim();
+            if (agehero.length() > 0) {
+                return agehero.trim();
+            }
+        }
+
+        return result;
+    }
+
+    private String parseCity(String html, String pattern){
+        String result = "";
+
+        Pattern regex = Pattern.compile(pattern);
+        Matcher regexMatcher = regex.matcher(html);
+
+        if (regexMatcher.find()) {
+            String hcity = regexMatcher.group(1).trim();
+            if (hcity.length() > 0) {
+                return hcity.trim();
+            }
+        }
+
+        return result;
+    }
+
+    private String parseSignOfTheZodiac(String html, String pattern){
+        String result = "";
+
+        Pattern regex = Pattern.compile(pattern);
+        Matcher regexMatcher = regex.matcher(html);
+
+        if (regexMatcher.find()) {
+            String signofthezodiac = regexMatcher.group(1).trim();
+            if (signofthezodiac.length() > 0) {
+                return signofthezodiac.trim();
+            }
+        }
+
+        return result;
+    }
+
+    private String parseDescription(String html, String pattern){
+        String result = "";
+
+        Pattern regex = Pattern.compile(pattern);
+        Matcher regexMatcher = regex.matcher(html);
+
+        if (regexMatcher.find()) {
+            String description = regexMatcher.group(1).trim();
+            if (description.length() > 0) {
+                return description.trim();
+            }
+        }
+
         return result;
     }
 }
