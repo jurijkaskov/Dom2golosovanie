@@ -11,6 +11,15 @@ public class Hero {
     String city; // Москва
     String signOfTheZodiac; // знак зодиака
     String description; // Описание героя
+    String photo; // Фото
+
+    public String getPhoto() {
+        return photo;
+    }
+
+    public void setPhoto(String photo) {
+        this.photo = photo;
+    }
 
     public String getFio() {
         return fio;

@@ -54,8 +54,9 @@ public class Dom2ruParser {
         hero.setCity(this.parseCity(html, "<td class='left'>город</td><td class='right'>(.*?)</td>")); // город
         hero.setSignOfTheZodiac(this.parseSignOfTheZodiac(html, "<td class='right'><span class='relative'><span>(.*?)<img src")); // зодиак
         hero.setDescription(this.parseDescription(html, "<div class=\"content-text\">\\s+<p(.*?)>(.*?)<\\/div>")); // описание героя
+        hero.setPhoto(this.parsePhoto(html, "<link rel=\"image_src\" type=\"image\\/jpeg\" href=\"(.*?)\"\\/>")); // фото
 
-        Log.i("666", count + "=" + id+ "[-"+this.parseDescription(html, "<div class=\"content-text\">\\s+<p(.*?)>(.*?)<\\/div>")+"-]");
+        Log.i("666", count + "=" + id+ "[-"+this.parsePhoto(html, "<link rel=\"image_src\" type=\"image\\/jpeg\" href=\"(.*?)\"\\/>")+"-]");
         count++;
 
     }
@@ -213,6 +214,22 @@ public class Dom2ruParser {
             String description = regexMatcher.group(0).trim();
             if (description.length() > 0) {
                 return description.replaceAll("<!--(.*)-->", "").replaceAll("<span(.*?)>", "<span>").replaceAll("<p(.*?)>", "<p>").replaceAll("<a(.*?)</a>", "").replaceAll("<br />", "").replaceAll("</div>", "").replaceAll("<div class=\"content-text\">", "").replaceAll("<p></p>", "").replaceAll("<p>&nbsp;</p>", "").trim();
+            }
+        }
+
+        return result;
+    }
+
+    private String parsePhoto(String html, String pattern){
+        String result = "";
+
+        Pattern regex = Pattern.compile(pattern);
+        Matcher regexMatcher = regex.matcher(html);
+
+        if (regexMatcher.find()) {
+            String photo = regexMatcher.group(1).trim();
+            if (photo.length() > 0) {
+                return photo.trim();
             }
         }
 
