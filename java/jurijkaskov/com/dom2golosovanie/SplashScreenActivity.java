@@ -65,7 +65,7 @@ public class SplashScreenActivity extends Activity {
 
             if(updateDate == -1 || (updateDate-curTime)>oneDay || (curTime-updateDate)>oneDay) { // первое обновление или прошло с моследнего обновления больше 24ч
 
-                Dom2ruParser d2p = new Dom2ruParser(getString(R.string.heroes_feed));
+                Dom2ruParser d2p = new Dom2ruParser(getString(R.string.heroes_feed), getApplicationContext());
                 ArrayList heroes = d2p.updateHeroesList(); // список id участников - 120772848
 
                 for (int i = 0; i < heroes.size(); i++) {

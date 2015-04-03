@@ -1,5 +1,8 @@
 package jurijkaskov.com.dom2golosovanie;
 
+import android.content.Context;
+import android.database.sqlite.SQLiteDatabase;
+import android.util.Base64;
 import android.util.Log;
 
 import java.io.BufferedReader;
@@ -19,13 +22,23 @@ import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+
 /**
  * Created by raccoon on 29.03.2015.
  */
 public class Dom2ruParser {
     private URL url = null;
 
-    public Dom2ruParser(String _url) {
+    private Context mContext;
+
+    private SQLiteDatabase heroesDB;
+    private static final String DATABASE_NAME = "allheroes.db";
+    private static final String DATABASE_TABLE = "heroes";
+    private static final String TABLE_CREATE = "CREATE TABLE IF NOT EXISTS " + DATABASE_TABLE + " (id INTEGER PRIMARY KEY AUTOINCREMENT, heroId INT UNIQUE ON CONFLICT REPLACE, fio STRING, daysOfTheShow INTEGER, startDate STRING, ageHero INTEGER, city STRING, signOfTheZodiac STRING, description TEXT, photo STRING)";
+
+    public Dom2ruParser(String _url, Context _cont) {
+        mContext = _cont;
+        this.createDatabase();
         try {
             url = new URL(_url);
         } catch (MalformedURLException e) {
@@ -55,8 +68,22 @@ public class Dom2ruParser {
         hero.setSignOfTheZodiac(this.parseSignOfTheZodiac(html, "<td class='right'><span class='relative'><span>(.*?)<img src")); // зодиак
         hero.setDescription(this.parseDescription(html, "<div class=\"content-text\">\\s+<p(.*?)>(.*?)<\\/div>")); // описание героя
         hero.setPhoto(this.parsePhoto(html, "<link rel=\"image_src\" type=\"image\\/jpeg\" href=\"(.*?)\"\\/>")); // фото
+        hero.setHeroId(id);
 
-        Log.i("666", count + "=" + id+ "[-"+this.parsePhoto(html, "<link rel=\"image_src\" type=\"image\\/jpeg\" href=\"(.*?)\"\\/>")+"-]");
+        Log.i(count+"666", "**************************************************");
+        Log.i("666Fio", hero.getFio());
+        Log.i("666DaysOfTheShow", hero.getDaysOfTheShow());
+        Log.i("666StartDate", hero.getStartDate());
+        Log.i("666AgeHero", hero.getAgeHero());
+        Log.i("666City", hero.getCity());
+        Log.i("666SignOfTheZodiac", hero.getSignOfTheZodiac());
+        Log.i("666Description", hero.getDescription());
+        Log.i("666Photo", hero.getPhoto());
+        Log.i("666HeroId", hero.getHeroId());
+        Log.i("666", "**************************************************");
+
+        this.writtenToTheDatabase(hero); // сохранить в базе и скачать фото
+        //Log.i("666", count + "=" + id+ "[-"+hero.getDescription()+"-]");
         count++;
 
     }
@@ -234,5 +261,36 @@ public class Dom2ruParser {
         }
 
         return result;
+    }
+
+    private void createDatabase(){
+        heroesDB = mContext.openOrCreateDatabase(DATABASE_NAME, Context.MODE_PRIVATE, null);
+        heroesDB.execSQL(TABLE_CREATE);
+    }
+
+    private void writtenToTheDatabase(Hero hero){
+        // INSERT OR REPLACE INTO heroes (heroId, fio, daysOfTheShow, startDate, ageHero, city, signOfTheZodiac, description, photo) VALUES ("123", "ff", "13", "213", "243", "dsfsd", "fsd", "dfd", "ccc");
+        if(hero.heroId.length()>0 && hero.fio.length()>0){
+            heroesDB.execSQL("INSERT OR REPLACE INTO heroes (heroId, fio, daysOfTheShow, startDate, ageHero, city, signOfTheZodiac, description, photo) VALUES (\""+hero.getHeroId()+"\", \""+hero.getFio()+"\", \""+hero.getDaysOfTheShow()+"\", \""+hero.getStartDate()+"\", \""+hero.getAgeHero()+"\", \""+hero.getCity()+"\", \""+hero.getSignOfTheZodiac()+"\", \""+new String(Base64.encode(hero.getDescription().getBytes(), 0))+"\", \""+hero.getPhoto()+"\")");
+            //Log.i("1111111", new String(Base64.encode("INSERT OR REPLACE INTO heroes".getBytes(), 0)));
+        }
+    }
+    /*
+    Log.i("666Fio", hero.getFio());
+        Log.i("666DaysOfTheShow", hero.getDaysOfTheShow());
+        Log.i("666StartDate", hero.getStartDate());
+        Log.i("666AgeHero", hero.getAgeHero());
+        Log.i("666City", hero.getCity());
+        Log.i("666SignOfTheZodiac", hero.getSignOfTheZodiac());
+        Log.i("666Description", hero.getDescription());
+        Log.i("666Photo", hero.getPhoto());
+        Log.i("666HeroId", hero.getHeroId());
+        Log.i("666", "**************************************************");
+     */
+
+    protected void finalize ( ) {
+        if(heroesDB != null) {
+            heroesDB.close();
+        }
     }
 }

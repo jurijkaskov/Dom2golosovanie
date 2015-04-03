@@ -12,6 +12,15 @@ public class Hero {
     String signOfTheZodiac; // знак зодиака
     String description; // Описание героя
     String photo; // Фото
+    String heroId; // id на сайте
+
+    public String getHeroId() {
+        return heroId;
+    }
+
+    public void setHeroId(String heroId) {
+        this.heroId = heroId;
+    }
 
     public String getPhoto() {
         return photo;
