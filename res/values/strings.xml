@@ -6,4 +6,5 @@
     <string name="splash_screen_logo_content_description">splash screen activity logo</string>
     <string name="splash_screen_loading_status">Обновление участников</string> <!-- Обновление участников 1 -->
     <string name="heroes_feed">http://dom2.ru/heroes</string>
+    <string name="photo_folder">imgheroesphoto</string>
 </resources>

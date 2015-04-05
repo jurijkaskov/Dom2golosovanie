@@ -7,6 +7,8 @@ import android.util.Log;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -36,8 +38,11 @@ public class Dom2ruParser {
     private static final String DATABASE_TABLE = "heroes";
     private static final String TABLE_CREATE = "CREATE TABLE IF NOT EXISTS " + DATABASE_TABLE + " (id INTEGER PRIMARY KEY AUTOINCREMENT, heroId INT UNIQUE ON CONFLICT REPLACE, fio STRING, daysOfTheShow INTEGER, startDate STRING, ageHero INTEGER, city STRING, signOfTheZodiac STRING, description TEXT, photo STRING)";
 
-    public Dom2ruParser(String _url, Context _cont) {
+    private String photodir;
+
+    public Dom2ruParser(String _url, Context _cont, String _photodir) {
         mContext = _cont;
+        photodir = _photodir;
         this.createDatabase();
         try {
             url = new URL(_url);
@@ -67,7 +72,7 @@ public class Dom2ruParser {
         hero.setCity(this.parseCity(html, "<td class='left'>город</td><td class='right'>(.*?)</td>")); // город
         hero.setSignOfTheZodiac(this.parseSignOfTheZodiac(html, "<td class='right'><span class='relative'><span>(.*?)<img src")); // зодиак
         hero.setDescription(this.parseDescription(html, "<div class=\"content-text\">\\s+<p(.*?)>(.*?)<\\/div>")); // описание героя
-        hero.setPhoto(this.parsePhoto(html, "<link rel=\"image_src\" type=\"image\\/jpeg\" href=\"(.*?)\"\\/>")); // фото
+        hero.setPhoto(this.downloadPhoto(this.parsePhoto(html, "<link rel=\"image_src\" type=\"image\\/jpeg\" href=\"(.*?)\"\\/>"))); // фото
         hero.setHeroId(id);
 
         Log.i(count+"666", "**************************************************");
@@ -83,7 +88,8 @@ public class Dom2ruParser {
         Log.i("666", "**************************************************");
 
         this.writtenToTheDatabase(hero); // сохранить в базе и скачать фото
-        //Log.i("666", count + "=" + id+ "[-"+hero.getDescription()+"-]");
+
+        Log.i("666", count + "=" + id+ "[-"+hero.getPhoto()+"-]");
         count++;
 
     }
@@ -292,5 +298,41 @@ public class Dom2ruParser {
         if(heroesDB != null) {
             heroesDB.close();
         }
+    }
+
+    private String downloadPhoto(String urlPhoto){
+        String filename = "";
+        String result = "";
+
+
+        String[] split = urlPhoto.split("/");
+        filename = split[split.length-1];
+
+
+        String homePath = mContext.getApplicationInfo().dataDir;
+        try {
+            File dest_file = new File(homePath + "/app_" + photodir + "/" + filename);
+
+            URL u = new URL(urlPhoto);
+            URLConnection conn = u.openConnection();
+            int contentLength = conn.getContentLength();
+            DataInputStream stream = new DataInputStream(u.openStream());
+            byte[] buffer = new byte[contentLength];
+            stream.readFully(buffer);
+            stream.close();
+            DataOutputStream fos = new DataOutputStream(new FileOutputStream(dest_file));
+            fos.write(buffer);
+            fos.flush();
+            fos.close();
+
+            if(dest_file.exists()) {
+                result = homePath + "app_" + photodir + "/" + filename;
+            }
+        }
+        catch (Exception ex){
+            return result;
+        }
+
+        return result;
     }
 }
