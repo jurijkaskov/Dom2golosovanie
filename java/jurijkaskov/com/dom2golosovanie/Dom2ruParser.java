@@ -75,7 +75,7 @@ public class Dom2ruParser {
         hero.setPhoto(this.downloadPhoto(this.parsePhoto(html, "<link rel=\"image_src\" type=\"image\\/jpeg\" href=\"(.*?)\"\\/>"))); // фото
         hero.setHeroId(id);
 
-        Log.i(count+"666", "**************************************************");
+        /*Log.i(count+"666", "**************************************************");
         Log.i("666Fio", hero.getFio());
         Log.i("666DaysOfTheShow", hero.getDaysOfTheShow());
         Log.i("666StartDate", hero.getStartDate());
@@ -85,11 +85,11 @@ public class Dom2ruParser {
         Log.i("666Description", hero.getDescription());
         Log.i("666Photo", hero.getPhoto());
         Log.i("666HeroId", hero.getHeroId());
-        Log.i("666", "**************************************************");
+        Log.i("666", "**************************************************");*/
 
         this.writtenToTheDatabase(hero); // сохранить в базе и скачать фото
 
-        Log.i("666", count + "=" + id+ "[-"+hero.getPhoto()+"-]");
+        //Log.i("666", count + "=" + id+ "[-"+hero.getPhoto()+"-]");
         count++;
 
     }
@@ -300,7 +300,7 @@ public class Dom2ruParser {
         }
     }
 
-    private String downloadPhoto(String urlPhoto){
+    private String downloadPhoto(String urlPhoto){ // фото перезаписываются
         String filename = "";
         String result = "";
 

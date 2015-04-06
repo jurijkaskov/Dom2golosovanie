@@ -33,6 +33,9 @@ public class SplashScreenActivity extends Activity {
 
     private Long oneDay = 30L; // 1=1s 86400=24h
     private String photodir;
+    private int totalHeroes;
+
+    ThreadControl tControl = new ThreadControl(); // управление потоком
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -46,7 +49,7 @@ public class SplashScreenActivity extends Activity {
         if(isFirstTime()) { // если запускается впервые, то создается папка для изображений
      //
             SharedPreferences projectSettings = getSharedPreferences(PROJECT_SETTINGS, Activity.MODE_PRIVATE);
-            File dir = getApplicationContext().getDir(photodir, getApplicationContext().MODE_PRIVATE); // папка с фотографиями
+            File dir = SplashScreenActivity.this.getDir(photodir, SplashScreenActivity.this.MODE_PRIVATE); // папка с фотографиями
             projectSettings.edit().putString("internalphotodir",  photodir).apply();
         }
 
@@ -79,7 +82,7 @@ public class SplashScreenActivity extends Activity {
                 s.append(" ");
                 s.append(values[0]);
 
-                load_indicator.setText(s.toString());
+                load_indicator.setText(s.toString() + "/" + totalHeroes);
             }
 
             @Override
@@ -93,10 +96,19 @@ public class SplashScreenActivity extends Activity {
 
                 if(updateDate == -1 || (updateDate-curTime)>oneDay || (curTime-updateDate)>oneDay) { // первое обновление или прошло с моследнего обновления больше 24ч
 
-                    Dom2ruParser d2p = new Dom2ruParser(getString(R.string.heroes_feed), getApplicationContext(), photodir);
+                    Dom2ruParser d2p = new Dom2ruParser(getString(R.string.heroes_feed), SplashScreenActivity.this, photodir);
                     ArrayList heroes = d2p.updateHeroesList(); // список id участников - 120772848
 
-                    for (int i = 0; i < heroes.size(); i++) {
+                    totalHeroes = heroes.size();
+                    for (int i = 0; i < totalHeroes; i++) {
+                        try { // ожидать, если активити скрыто
+                            tControl.waitIfPaused();
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                        if(tControl.isCancelled()){ // остановить, если отменено
+                            break;
+                        }
 
                         d2p.downloadHero((String) heroes.get(i)); // обновление и вставка в базу героя
 
@@ -135,18 +147,20 @@ public class SplashScreenActivity extends Activity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        Log.i("33333222222222222222", "ONDESTROY");
+        tControl.cancel();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        Log.i("33333222222222222222", "ONRESUME");
+        tControl.resume();
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        Log.i("33333222222222222222", "ONPAUSE");
+        tControl.pause();
     }
+
+
 }
