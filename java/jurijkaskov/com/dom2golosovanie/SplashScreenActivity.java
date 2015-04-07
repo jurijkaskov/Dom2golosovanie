@@ -1,8 +1,10 @@
 package jurijkaskov.com.dom2golosovanie;
 
 import android.app.Activity;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -21,7 +23,7 @@ import java.util.logging.ConsoleHandler;
 import static java.lang.Thread.sleep;
 
 
-public class SplashScreenActivity extends Activity {
+public class SplashScreenActivity extends Activity{
 
     TextView load_indicator;
     private String FIRST_TIME = "FIRST_TIME"; // первый запуск приложения
@@ -35,15 +37,12 @@ public class SplashScreenActivity extends Activity {
     private String photodir;
     private int totalHeroes;
 
+
     ThreadControl tControl = new ThreadControl(); // управление потоком
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash_screen);
-
-
-
-
 
         photodir = (String)getResources().getText(R.string.photo_folder);
         if(isFirstTime()) { // если запускается впервые, то создается папка для изображений
@@ -54,6 +53,7 @@ public class SplashScreenActivity extends Activity {
         }
 
         load_indicator = (TextView) findViewById(R.id.loadindicator);
+
 
         // парсинг участников
         AsyncTask<Void, Integer, Void> task = new AsyncTask<Void, Integer, Void>() {
@@ -85,6 +85,7 @@ public class SplashScreenActivity extends Activity {
                 load_indicator.setText(s.toString() + "/" + totalHeroes);
             }
 
+            private int herCursor = 0;
             @Override
             protected Void doInBackground(Void... params) {
                 Date date = new Date();
@@ -100,7 +101,7 @@ public class SplashScreenActivity extends Activity {
                     ArrayList heroes = d2p.updateHeroesList(); // список id участников - 120772848
 
                     totalHeroes = heroes.size();
-                    for (int i = 0; i < totalHeroes; i++) {
+                    for (; herCursor < totalHeroes; herCursor++) {
                         try { // ожидать, если активити скрыто
                             tControl.waitIfPaused();
                         } catch (InterruptedException e) {
@@ -110,10 +111,11 @@ public class SplashScreenActivity extends Activity {
                             break;
                         }
 
-                        d2p.downloadHero((String) heroes.get(i)); // обновление и вставка в базу героя
+                        d2p.downloadHero((String) heroes.get(herCursor)); // обновление и вставка в базу героя
 
-                        publishProgress(i);
+                        publishProgress(herCursor);
                     }
+                    herCursor = 0; //сброс счетчика
 
                     SharedPreferences.Editor editor = sharedPrefs.edit(); // после каждого обновления дата меняется
                     editor.putLong("updatedate", curTime);
@@ -161,6 +163,5 @@ public class SplashScreenActivity extends Activity {
         super.onPause();
         tControl.pause();
     }
-
 
 }

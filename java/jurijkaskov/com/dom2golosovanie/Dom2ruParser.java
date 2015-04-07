@@ -137,7 +137,7 @@ public class Dom2ruParser {
                 return a.toString();
             }
         }catch (Exception ex){
-            //
+            Log.i("1111111", ex.getMessage());
         }
         return "";
     }
@@ -300,7 +300,7 @@ public class Dom2ruParser {
         }
     }
 
-    private String downloadPhoto(String urlPhoto){ // фото перезаписываются
+    private String downloadPhoto(String urlPhoto) { // фото перезаписываются
         String filename = "";
         String result = "";
 
