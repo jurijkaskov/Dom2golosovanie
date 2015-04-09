@@ -17,18 +17,20 @@
             android:layout_centerHorizontal="true"
             android:layout_centerVertical="true"
             android:contentDescription="@string/splash_screen_logo_content_description" />
-        <TextView
-            android:gravity="center_horizontal"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/splash_screen_loading_status"
-            android:layout_below="@+id/imageView"
-            android:layout_alignLeft="@+id/imageView"
-            android:layout_alignStart="@+id/imageView"
-            android:layout_alignRight="@+id/imageView"
-            android:layout_alignEnd="@+id/imageView"
-            android:id="@+id/loadindicator"
-            android:textColor="@color/splash_screen_loading_status_color"
-            />
+
+
+     <TextView
+        android:gravity="center_horizontal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/splash_screen_loading_status"
+        android:layout_below="@+id/imageView"
+        android:layout_alignLeft="@+id/imageView"
+        android:layout_alignStart="@+id/imageView"
+        android:layout_alignRight="@+id/imageView"
+        android:layout_alignEnd="@+id/imageView"
+        android:id="@+id/loadindicator"
+        android:textColor="@color/splash_screen_loading_status_color"
+        />
 
 </RelativeLayout>

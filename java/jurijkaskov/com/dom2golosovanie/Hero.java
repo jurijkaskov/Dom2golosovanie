@@ -1,88 +1,88 @@
 package jurijkaskov.com.dom2golosovanie;
 
 /**
- * Created by raccoon on 01.04.2015.
+ * Created by raccoon on 07.04.2015.
  */
 public class Hero {
-    String fio; // Анастасия Лисова
-    String daysOfTheShow; // 60 дней
-    String startDate; // c 31 января
-    String ageHero; // 24 года
-    String city; // Москва
-    String signOfTheZodiac; // знак зодиака
-    String description; // Описание героя
-    String photo; // Фото
-    String heroId; // id на сайте
+    String mFio; // Анастасия Лисова
+    String mDaysOfTheShow; // 60 дней
+    String mStartDate; // c 31 января
+    String mAgeHero; // 24 года
+    String mCity; // Москва
+    String mSignOfTheZodiac; // знак зодиака
+    String mDescription; // Описание героя
+    String mPhoto; // Фото
+    String mHeroId; // id на сайте
 
-    public String getHeroId() {
-        return heroId;
+    public String getmFio() {
+        return mFio;
     }
 
-    public void setHeroId(String heroId) {
-        this.heroId = heroId;
+    public void setmFio(String mFio) {
+        this.mFio = mFio;
     }
 
-    public String getPhoto() {
-        return photo;
+    public String getmDaysOfTheShow() {
+        return mDaysOfTheShow;
     }
 
-    public void setPhoto(String photo) {
-        this.photo = photo;
+    public void setmDaysOfTheShow(String mDaysOfTheShow) {
+        this.mDaysOfTheShow = mDaysOfTheShow;
     }
 
-    public String getFio() {
-        return fio;
+    public String getmStartDate() {
+        return mStartDate;
     }
 
-    public void setFio(String fio) {
-        this.fio = fio;
+    public void setmStartDate(String mStartDate) {
+        this.mStartDate = mStartDate;
     }
 
-    public String getDaysOfTheShow() {
-        return daysOfTheShow;
+    public String getmAgeHero() {
+        return mAgeHero;
     }
 
-    public void setDaysOfTheShow(String daysOfTheShow) {
-        this.daysOfTheShow = daysOfTheShow;
+    public void setmAgeHero(String mAgeHero) {
+        this.mAgeHero = mAgeHero;
     }
 
-    public String getStartDate() {
-        return startDate;
+    public String getmCity() {
+        return mCity;
     }
 
-    public void setStartDate(String startDate) {
-        this.startDate = startDate;
+    public void setmCity(String mCity) {
+        this.mCity = mCity;
     }
 
-    public String getAgeHero() {
-        return ageHero;
+    public String getmSignOfTheZodiac() {
+        return mSignOfTheZodiac;
     }
 
-    public void setAgeHero(String ageHero) {
-        this.ageHero = ageHero;
+    public void setmSignOfTheZodiac(String mSignOfTheZodiac) {
+        this.mSignOfTheZodiac = mSignOfTheZodiac;
     }
 
-    public String getCity() {
-        return city;
+    public String getmDescription() {
+        return mDescription;
     }
 
-    public void setCity(String city) {
-        this.city = city;
+    public void setmDescription(String mDescription) {
+        this.mDescription = mDescription;
     }
 
-    public String getSignOfTheZodiac() {
-        return signOfTheZodiac;
+    public String getmPhoto() {
+        return mPhoto;
     }
 
-    public void setSignOfTheZodiac(String signOfTheZodiac) {
-        this.signOfTheZodiac = signOfTheZodiac;
+    public void setmPhoto(String mPhoto) {
+        this.mPhoto = mPhoto;
     }
 
-    public String getDescription() {
-        return description;
+    public String getmHeroId() {
+        return mHeroId;
     }
 
-    public void setDescription(String description) {
-        this.description = description;
+    public void setmHeroId(String mHeroId) {
+        this.mHeroId = mHeroId;
     }
 }

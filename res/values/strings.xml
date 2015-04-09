@@ -4,7 +4,7 @@
     <string name="action_settings">Settings</string>
     <string name="title_activity_splash_screen">Дом 2 голосование</string>
     <string name="splash_screen_logo_content_description">splash screen activity logo</string>
-    <string name="splash_screen_loading_status">Обновление участников</string> <!-- Обновление участников 1 -->
     <string name="heroes_feed">http://dom2.ru/heroes</string>
-    <string name="photo_folder">imgheroesphoto</string>
+    <string name="photo_folder">photofolder</string>
+    <string name="splash_screen_loading_status">Обновление</string>
 </resources>
