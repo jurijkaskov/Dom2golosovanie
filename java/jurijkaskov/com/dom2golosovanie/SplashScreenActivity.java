@@ -33,31 +33,44 @@ public class SplashScreenActivity extends Activity{
 
     private static final String TAG = "Dom2Parser";
     private static final String HERO_UPDATED = "HERO_UPDATED";
-    TextView mLoadIndicator;
-    String text;
+    private TextView mLoadIndicator;
+    private String mText;
     private static int mHeroesTotal = 0;
+    private String UPDATE_DATE = "UPDATE_DATE";
+    private Long mRenewalPeriod = 60L; // 1=1s 86400=24h
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash_screen);
 
         mLoadIndicator = (TextView) findViewById(R.id.loadindicator);
-        text = getString(R.string.splash_screen_loading_status);
+        mText = getString(R.string.splash_screen_loading_status);
 
-        /*
-        if(savedInstanceState == null){ // старт сервиса при запуске
+
+        Date mDate = new Date();
+        Long mCurTime = mDate.getTime()/1000; //sec
+        SharedPreferences mSharedPrefs = getSharedPreferences(UPDATE_DATE, Activity.MODE_PRIVATE);
+        Long mUpdateDate = mSharedPrefs.getLong("updatedate", -1);
+
+        if(mUpdateDate == -1 || (mUpdateDate-mCurTime)>mRenewalPeriod || (mCurTime-mUpdateDate)>mRenewalPeriod) { // первое обновление или прошло с моследнего обновления больше 24ч
+
             startService(new Intent(this, Dom2Parser.class));
-        }*/
-        startService(new Intent(this, Dom2Parser.class));
+
+            SharedPreferences.Editor mEditor = mSharedPrefs.edit(); // после каждого обновления дата меняется
+            mEditor.putLong("updatedate", mCurTime);
+            mEditor.apply();
+        }else{ // если обновление было недавно, то запускается сразу mainactivity
+            startMainActivity();
+        }
     }
 
-    BroadcastReceiver mHeroUpdateReceiver;
+    private BroadcastReceiver mHeroUpdateReceiver;
     @Override
     protected void onResume() {
         super.onResume();
 
         mHeroUpdateReceiver = new UpdaterBroadcastReceiver();
-        registerReceiver(
+        registerReceiver( // прием данных из сервиса
                 mHeroUpdateReceiver,
                 new IntentFilter(HERO_UPDATED));
     }
@@ -65,32 +78,43 @@ public class SplashScreenActivity extends Activity{
     @Override
     protected void onPause() {
         super.onPause();
-        unregisterReceiver(mHeroUpdateReceiver);
+        unregisterReceiver(mHeroUpdateReceiver); // отписаться от приема широковещательных намерений из сервиса
     }
 
-    public class UpdaterBroadcastReceiver extends BroadcastReceiver{
+    public class UpdaterBroadcastReceiver extends BroadcastReceiver{ // применик намерений из сервиса
 
         @Override
         public void onReceive(Context context, Intent intent) {
             Bundle mExtras = intent.getExtras();
             if (mExtras != null) {
-                if(mExtras.containsKey("max")){
-                    mHeroesTotal = (int)mExtras.get("max");//Toast.makeText(SplashScreenActivity.this, String.valueOf(mExtras.get("max")), Toast.LENGTH_LONG).show();
+                if(mExtras.containsKey("max")){ // максимальное количество героев
+                    mHeroesTotal = (int)mExtras.get("max");
+                }
+                if(mExtras.containsKey("finish")){ // если true, то сервис закончил работу
+                    if((boolean)mExtras.get("finish")) {
+                        startMainActivity(); // запуск главной активити после обновления
+                    }
                 }
                 if(mExtras.containsKey("value")){
-                    //System.out.println("Value is:"+extras.get("value"));
-                    Log.i(TAG+"123", mExtras.get("value")+"");
+                    // отображение процентов обновления информации об участниках
                     String mValue = String.valueOf(mExtras.get("value"));
                     StringBuilder mSB = new StringBuilder();
-                    mSB.append(text);
+                    mSB.append(mText);
                     mSB.append(" ");
                     mSB.append(String.valueOf(Float.valueOf(mValue)/mHeroesTotal*100));
                     mSB.append("%");
 
+                    Log.i("2222222", mValue);
                     mLoadIndicator.setText(mSB.toString());
                 }
             }
         }
 
+    }
+
+    void startMainActivity(){ // запуск главной активити после обновления
+        Intent intent = new Intent(SplashScreenActivity.this, MainActivity.class);
+        startActivity(intent);
+        finish();
     }
 }

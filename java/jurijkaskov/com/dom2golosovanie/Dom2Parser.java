@@ -40,6 +40,7 @@ public class Dom2Parser extends Service {
                 ArrayList<String> mHeroes = mFunctions.getGeroesList(mHTML); // список id участников - 120772848
                 mHeroesTotal = mHeroes.size();
 
+                // отправка в splashscreen количества участников
                 Intent intent = new Intent();
                 intent.setAction(HERO_UPDATED);
                 intent.putExtra("max", mHeroesTotal);
@@ -58,6 +59,8 @@ public class Dom2Parser extends Service {
                     publishProgress(mCursorHero);
                 }
                 mCursorHero = 0; //сброс счетчика
+
+                sendFinishIntent(); // сообщение главной активити об окончании работы сервиса
 
                 return null;
             }
@@ -112,6 +115,13 @@ public class Dom2Parser extends Service {
     public IBinder onBind(Intent intent) {
         // TODO: Return the communication channel to the service.
         throw new UnsupportedOperationException("Not yet implemented");
+    }
+
+    void sendFinishIntent(){ // сообщение главной активити об окончании работы сервиса
+        Intent intent = new Intent();
+        intent.setAction(HERO_UPDATED);
+        intent.putExtra("finish", true);
+        sendBroadcast(intent);
     }
 
 }
