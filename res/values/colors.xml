@@ -2,4 +2,11 @@
 <resources>
     <color name="splash_screen_bg_color">#FF2B7A</color> <!--заливка splash screen -->
     <color name="splash_screen_loading_status_color">#B6B6B6</color>
+    <color name="heroes_list_bg">#212121</color>
+    <color name="main_activity_bg">#727272</color>
+    <color name="fio_color">#FFFFFF</color>
+    <color name="hlv_diviner_color">#727272</color>
+
+    <color name="action_bar_bg_color">#E91E63</color>
+    <color name="action_bar_color_text">#ff12ff1e</color>
 </resources>

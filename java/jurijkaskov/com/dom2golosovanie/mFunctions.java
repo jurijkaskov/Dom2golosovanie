@@ -1,5 +1,7 @@
 package jurijkaskov.com.dom2golosovanie;
 
+import android.util.Log;
+
 import java.io.BufferedReader;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -41,6 +43,7 @@ public class mFunctions{
             }
         }
         catch (Exception ex){
+            Log.i("ERR", ex.getMessage());
             return mResult;
         }
         return  mResult;

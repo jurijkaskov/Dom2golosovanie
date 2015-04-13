@@ -17,6 +17,13 @@ public class Hero {
     public String getmFio() {
         return mFio;
     }
+    public String toString(){
+        StringBuilder mSB = new StringBuilder();
+        mSB.append("Инициалы: ");
+        mSB.append(this.mFio);
+
+        return mSB.toString();
+    }
 
     public void setmFio(String mFio) {
         this.mFio = mFio;

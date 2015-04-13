@@ -7,4 +7,9 @@
     <string name="heroes_feed">http://dom2.ru/heroes</string>
     <string name="photo_folder">photofolder</string>
     <string name="splash_screen_loading_status">Обновление</string>
+    <string name="city_lab">Город:</string>
+    <string name="age_lab">Возраст:</string>
+    <string name="days_of_the_show_lab">Дней на шоу:</string>
+    <string name="main_activity_title">Дом 2 голосование</string>
+
 </resources>

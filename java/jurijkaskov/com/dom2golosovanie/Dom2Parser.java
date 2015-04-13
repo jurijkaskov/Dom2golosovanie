@@ -3,12 +3,8 @@ package jurijkaskov.com.dom2golosovanie;
 import android.app.Service;
 import android.content.Intent;
 import android.os.AsyncTask;
-import android.os.Binder;
 import android.os.IBinder;
 import android.util.Log;
-import android.view.LayoutInflater;
-import android.widget.TextView;
-
 import java.io.File;
 import java.util.ArrayList;
 
@@ -17,34 +13,24 @@ public class Dom2Parser extends Service {
     private static final String PHOTOFOLDER = "photofolder";
     private static int mHeroesTotal = 0;
     private static int mCursorHero = 0;
-    private static final String HERO_UPDATED = "HERO_UPDATED";
+    private static final String NEW_DATA_HERO = "NEW_DATA_HERO";
 
     private String mApplicationDir;
-
-    private Service mDom2ParserService = this;
     public Dom2Parser() {
     }
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        Log.i(TAG, "onStartCommand, flags:" + flags + "startId:" + startId);
 
-        AsyncTask<Void, Integer, Void> mTask = new AsyncTask<Void, Integer, Void>() {
+        AsyncTask<Void, Void, Void> mTask = new AsyncTask<Void, Void, Void>() {
             @Override
             protected Void doInBackground(Void... params) {
-                Log.i(TAG, "doInBackground");
                 String mHTML = "";
                 mHTML = mFunctions.getPage((String)getResources().getText(R.string.heroes_feed)); // страница http://dom2.ru/heroes
                 if(mHTML.length() == 0 || mHTML == null)
                     return null;
                 ArrayList<String> mHeroes = mFunctions.getGeroesList(mHTML); // список id участников - 120772848
                 mHeroesTotal = mHeroes.size();
-
-                // отправка в splashscreen количества участников
-                Intent intent = new Intent();
-                intent.setAction(HERO_UPDATED);
-                intent.putExtra("max", mHeroesTotal);
-                sendBroadcast(intent);
 
                 if(mHeroesTotal < 1){
                     return null;
@@ -54,45 +40,47 @@ public class Dom2Parser extends Service {
                 for(String mS: mHeroes){
                     Hero mCurHero = mFunctions.downloadHero(mS);
                     mCurHero.mPhoto = mFunctions.downloadPhoto(mCurHero.mPhoto, mApplicationDir + "/" + PHOTOFOLDER); // скачивание фотографии
-                    //Log.i(TAG, mCurHero.mPhoto + "===" + mApplicationDir);
+
                     mCursorHero++;
-                    publishProgress(mCursorHero);
+
+                    newDataHero(mCurHero); // отправка намерения при получении данных о герое
                 }
                 mCursorHero = 0; //сброс счетчика
-
-                sendFinishIntent(); // сообщение главной активити об окончании работы сервиса
 
                 return null;
             }
 
-            @Override
-            protected void onProgressUpdate(Integer... values) {
-                super.onProgressUpdate(values);
-                Intent intent = new Intent();
-                intent.setAction(HERO_UPDATED);
-                intent.putExtra("value", mCursorHero);
-                sendBroadcast(intent);
+            private void newDataHero(Hero her){
+                Intent mIntent = new Intent(NEW_DATA_HERO);
+                mIntent.putExtra("Fio", her.getmFio());
+                mIntent.putExtra("DaysOfTheShow", her.getmDaysOfTheShow());
+                mIntent.putExtra("StartDate", her.getmStartDate());
+                mIntent.putExtra("AgeHero", her.getmAgeHero());
+                mIntent.putExtra("City", her.getmCity());
+                mIntent.putExtra("SignOfTheZodiac", her.getmSignOfTheZodiac());
+                mIntent.putExtra("Description", her.getmDescription());
+                mIntent.putExtra("Photo", her.getmPhoto());
+                mIntent.putExtra("HeroId", her.getmHeroId());
+                sendBroadcast(mIntent);
             }
 
             @Override
             protected void onPreExecute() {
                 super.onPreExecute();
-                Log.i(TAG, "onPreExecute");
             }
 
             @Override
             protected void onPostExecute(Void aVoid) {
                 super.onPostExecute(aVoid);
-                Log.i(TAG, "onPostExecute");
+
                 stopSelf();
             }
         };
 
         if(startId == 1) { // не реагировать на повторные вызовы
-            mTask.execute();
-        }
+            //mTask.execute();
+        }mTask.execute();
 
-        Log.i(TAG, "111111111mTask.execute()");
         return super.onStartCommand(intent, flags, startId);
     }
 
@@ -116,12 +104,4 @@ public class Dom2Parser extends Service {
         // TODO: Return the communication channel to the service.
         throw new UnsupportedOperationException("Not yet implemented");
     }
-
-    void sendFinishIntent(){ // сообщение главной активити об окончании работы сервиса
-        Intent intent = new Intent();
-        intent.setAction(HERO_UPDATED);
-        intent.putExtra("finish", true);
-        sendBroadcast(intent);
-    }
-
 }

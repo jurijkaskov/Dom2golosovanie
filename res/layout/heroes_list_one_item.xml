@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <ImageView
+        android:layout_width="110dp"
+        android:layout_height="98dp"
+        android:id="@+id/photo_hero"
+        android:scaleType="fitXY"
+        android:src="@drawable/splash_screen_logo">
+        </ImageView>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/fio"
+        style="@style/hero_title"
+        android:layout_alignParentTop="true"
+        android:layout_toRightOf="@+id/photo_hero"
+        android:layout_toEndOf="@+id/photo_hero"
+        android:layout_marginLeft="10dp"
+        android:singleLine="true"
+        />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/age_hero_lab"
+        style="@style/hero_details"
+        android:text="@string/age_lab"
+        android:layout_below="@+id/fio"
+        android:layout_alignLeft="@+id/fio"
+        android:layout_alignStart="@+id/fio" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        style="@style/hero_details"
+        android:text="@string/city_lab"
+        android:layout_below="@+id/age_hero_lab"
+        android:layout_alignLeft="@+id/age_hero_lab"
+        android:layout_alignStart="@+id/age_hero_lab"
+        android:id="@+id/textView"
+        />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/days_of_the_show_lab"
+        style="@style/hero_details"
+        android:text="@string/days_of_the_show_lab"
+        android:layout_below="@+id/textView"
+        android:layout_alignLeft="@+id/textView"
+        android:layout_alignStart="@+id/textView" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        style="@style/hero_details"
+        android:singleLine="true"
+        android:id="@+id/age_hero"
+        android:layout_alignBaseline="@+id/age_hero_lab"
+        android:layout_alignBottom="@+id/age_hero_lab"
+        android:layout_toRightOf="@+id/days_of_the_show_lab"
+        android:layout_toEndOf="@+id/days_of_the_show_lab"
+        android:layout_marginLeft="5dp"
+        />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        style="@style/hero_details"
+        android:singleLine="true"
+        android:id="@+id/city"
+        android:layout_alignBaseline="@+id/textView"
+        android:layout_alignBottom="@+id/textView"
+        android:layout_toRightOf="@+id/days_of_the_show_lab"
+        android:layout_toEndOf="@+id/days_of_the_show_lab"
+        android:layout_marginLeft="5dp"
+        />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        style="@style/hero_details"
+        android:singleLine="true"
+        android:id="@+id/days_of_the_show"
+        android:layout_alignBaseline="@+id/days_of_the_show_lab"
+        android:layout_alignBottom="@+id/days_of_the_show_lab"
+        android:layout_alignLeft="@+id/city"
+        android:layout_alignStart="@+id/city"
+        />
+
+</RelativeLayout>
